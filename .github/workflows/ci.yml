@@ -29,12 +29,6 @@ jobs:
         with:
           python-version: "3.12"
 
-      # Debug repository structure
-      - name: Check repository structure
-        run: |
-          pwd
-          ls -R
-
       # Install dependencies
       - name: Install dependencies
         run: |
@@ -46,23 +40,24 @@ jobs:
         run: |
           mlflow run . --env-manager local
 
-      # Configure Git LFS
-      - name: Configure Git LFS
+      # Configure Git, Git LFS, and push mlruns
+      - name: Save MLflow artifacts
         run: |
-          git config --global user.name "${{ secrets.username }}"
-          git config --global user.email "${{ secrets.email }}"
+          # Configure Git
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+          # Configure Git LFS
           git lfs install
           git lfs track "mlruns/**"
 
+          # Commit .gitattributes if it changes
           git add .gitattributes
-          git commit -m "Track mlruns with Git LFS" || true
+          git commit -m "Configure Git LFS" || true
 
-      # Save mlruns
-      - name: Save mlruns
-        run: |
+          # Commit MLflow results
           git add -f mlruns/
-
           git commit -m "Save mlruns from CI run" || true
 
+          # Push all commits
           git push origin main
