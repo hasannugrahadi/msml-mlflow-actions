@@ -12,7 +12,7 @@ permissions:
   contents: write
 
 env:
-  CSV_URL: "MLproject/train_pca.csv"
+  CSV_URL: "train_pca.csv"
 
 jobs:
   build:
@@ -37,7 +37,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r MLproject/requirements.txt
+          pip install -r requirements.txt
 
       # Run MLflow Project
       - name: Run MLflow Project
